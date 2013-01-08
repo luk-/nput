@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "description": "put node on remote servers",
   "main": "index.js",
+  "preferGlobal": true,
   "directories": {
     "test": "test"
   },
@@ -28,6 +29,7 @@
   "license": "MIT",
   "dependencies": {
     "optimist": "0.3.5",
-    "osconfig": "0.0.1"
+    "osconfig": "0.0.1",
+    "colors": "~0.6.0-1"
   }
 }
