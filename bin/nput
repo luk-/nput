@@ -1,0 +1,16 @@
+#!/usr/bin/env node
+var optimist = require('optimist')
+
+optimist
+  .usage('$0 install v0.x.x user@host\n')
+  .alias('l', 'list')
+  .demand('s')
+  .default('p', '/usr/local')
+  .default('d', '/usr/local/src')
+  .describe('p', 'install path')
+  .describe('d', 'download path')
+  .describe('s', 'system. run jswork --list to see current options')
+  .describe('l', '--list, list current supported OSs')
+  .argv
+
+  optimist.argv._.length === 0 && (optimist.showHelp())

@@ -1,0 +1,33 @@
+{
+  "name": "nput",
+  "version": "0.0.0",
+  "description": "put node on remote servers",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "devDependencies": {
+    "tap": "0.3.3"
+  },
+  "scripts": {
+    "test": "tap test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com:st-luke/nput.git"
+  },
+  "keywords": [
+    "nput",
+    "provision"
+  ],
+  "author": {
+    "name": "Luke Arduini",
+    "email": "luke.arduini@me.com",
+    "url": "http://luke.xxx"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "optimist": "0.3.5",
+    "osconfig": "0.0.1"
+  }
+}
