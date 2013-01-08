@@ -9,7 +9,7 @@ optimist
   .default('d', '/usr/local/src')
   .describe('p', 'install path')
   .describe('d', 'download path')
-  .describe('s', 'system. run jswork --list to see current options')
+  .describe('s', 'system. run nput --list to see current options')
   .describe('l', '--list, list current supported OSs')
   .argv
 
