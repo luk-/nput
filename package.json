@@ -2,6 +2,9 @@
   "name": "nput",
   "version": "0.0.0",
   "description": "put node on remote servers",
+  "bin": {
+    "nput": "./bin/nput"
+  },
   "main": "index.js",
   "preferGlobal": true,
   "directories": {
@@ -29,7 +32,13 @@
   "license": "MIT",
   "dependencies": {
     "optimist": "0.3.5",
-    "osconfig": "0.0.1",
-    "colors": "~0.6.0-1"
+    "osconfig": "0.0.2",
+    "colors": "~0.6.0-1",
+    "keypress": "~0.1.0",
+    "nputrc": "0.0.1",
+    "checknode": "0.0.2",
+    "semver": "~1.1.2",
+    "ssh2": "~0.1.9",
+    "async": "~0.1.22"
   }
 }

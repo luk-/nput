@@ -1,8 +1,21 @@
 #!/usr/bin/env node
 
+var path = require('path')
 var optimist = require('optimist')
 var keypress = require('keypress')
+var osconfig = require('osconfig')
+var nputrc = require('nputrc')
+var checknode = require('checknode')
+var semver = require('semver')
 var nput = require('../')
+
+
+try {
+  var nput_conf = nputrc()
+} 
+catch (e) {
+  nput_conf = {}
+}
 
 var argv = optimist
   .usage('$0 install v0.x.x user@host\n')
@@ -13,7 +26,8 @@ var argv = optimist
   })
   .option('u', {
     alias: 'user',
-    desc: 'remote user'
+    desc: 'remote user',
+    default: nput_conf.user || 'root'
   })
   .option('p', {
     alias: 'password',
@@ -42,24 +56,79 @@ var argv = optimist
     alias: 'silent',
     desc: 'silence output from server on install'
   })
+  .option('h', {
+    alias: 'host',
+    desc: 'remote host'
+  })
+  .option('P', {
+    alias: 'port',
+    desc: 'remote host port',
+    default: 22
+  })
   .argv
 
 
+var install_args = {}
+//return console.log(argv)
+
+
+
+// path for osconfig scripts
+// TODO: make this not suck
+var os_dir = path.resolve(nput_conf.nput_dir, 'os')
+
+if (argv.l && nput_conf.nput_dir) {
+  return console.log(osconfig.list(os_dir))
+}
+
+
+if (argv.os) {
+  var os_arg = argv.os.split('@')
+  var os = osconfig.load({
+    os: os_arg[0],
+    version: os_arg[1],
+    dir: os_dir
+  })
+  install_args.os = os
+}
 
 // show help if no args
 process.argv.length <= 2 && (optimist.showHelp())
 
 // hide password input
 if (argv.p) {
+  console.log('enter remote host password: ')
   var pass = ''
   keypress(process.stdin)
   process.stdin.on('keypress', function (ch, key) {
-    pass += ch
-    if (key.sequence === '\r') {
-      console.log(pass)
+    if (key && key.sequence === '\u0003') {
+      console.log('killed'.red)
       process.exit()
+    }
+    if (key && key.sequence === '\r') {
+      install_args.password = pass
+      nput.start(install_args, function () {
+	process.exit()
+      })
+    } else {
+      pass += ch
     }
   })
   process.stdin.setRawMode(true)
   process.stdin.resume()
+}
+
+
+// check for node tarball
+if (argv._[0] === 'install') {
+  var node_ver = argv._[1]
+  checknode(node_ver, function (err, res) {
+    if (!err && res === 200) {
+      install_args.host = argv.h
+      install_args.user = argv.user
+      install_args.password = argv.password
+      install_args.port = argv.P
+      install_args.node_version = node_ver
+    }
+  })
 }
