@@ -1,16 +1,65 @@
 #!/usr/bin/env node
-var optimist = require('optimist')
 
-optimist
+var optimist = require('optimist')
+var keypress = require('keypress')
+var nput = require('../')
+
+var argv = optimist
   .usage('$0 install v0.x.x user@host\n')
-  .alias('l', 'list')
-  .demand('s')
-  .default('p', '/usr/local')
-  .default('d', '/usr/local/src')
-  .describe('p', 'install path')
-  .describe('d', 'download path')
-  .describe('s', 'system. run nput --list to see current options')
-  .describe('l', '--list, list current supported OSs')
+  .option('i', {
+    alias: 'identity',
+    desc: 'private ssh key file path\n'
+    + 'example: -i ~/.ssh/id_dsa'
+  })
+  .option('u', {
+    alias: 'user',
+    desc: 'remote user'
+  })
+  .option('p', {
+    alias: 'password',
+    desc: 'remote user pasword'
+  })
+  .option('d', {
+    alias: 'download',
+    desc: 'remote download path',
+    default: '/usr/local/src'
+  })
+  .option('r', {
+    alias: 'remote',
+    desc: 'remote install path',
+    default: '/usr/local'
+  })
+  .option('o', {
+    alias: 'os',
+    desc: 'OS install file to use\n'
+    + 'example: -o debian@6.0'
+  })
+  .option('l', {
+    alias: 'list',
+    desc: 'list current supported OSs'
+  })
+  .option('s', {
+    alias: 'silent',
+    desc: 'silence output from server on install'
+  })
   .argv
 
-  optimist.argv._.length === 0 && (optimist.showHelp())
+
+
+// show help if no args
+process.argv.length <= 2 && (optimist.showHelp())
+
+// hide password input
+if (argv.p) {
+  var pass = ''
+  keypress(process.stdin)
+  process.stdin.on('keypress', function (ch, key) {
+    pass += ch
+    if (key.sequence === '\r') {
+      console.log(pass)
+      process.exit()
+    }
+  })
+  process.stdin.setRawMode(true)
+  process.stdin.resume()
+}
