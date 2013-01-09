@@ -48,13 +48,13 @@ function build_async (steps, ssh, cb) {
     steps_async.push(function (cb) {
   
       con.exec(v, function (err, stream) {
-      	if (err) throw err
+        if (err) throw err
         stream.on('data', function (data, res) {
-      	  console.log(data.toString())
-    	  })
+          console.log(data.toString())
+        })
         stream.on('end', function () {
-	        cb(null)
-	      })
+          cb(null)
+        })
       })
       
     })
